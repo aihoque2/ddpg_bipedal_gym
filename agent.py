@@ -4,6 +4,6 @@
 import gym
 import time
 
-class ddpg_agent:
+class DDPG_Agent:
     def __init__(env, size, device):
         pass
