@@ -13,11 +13,8 @@ import gym
 import random
 from collections import namedtuple, deque
 
-Transition = namedtupled('Transition', ('state', 'action', 'next_state', 'reward'))
+Transition = namedtupled('Transition', ('state', 'action', 'next_state', 'reward')) #data that the replaybuffer takes
 
-"""
-TODO: replace the ReplayBuffer's deque with a new RingBuffer to make things faster
-"""
 
 class ReplayBuffer:
     def __init__(self, capacity):
