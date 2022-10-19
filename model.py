@@ -13,13 +13,17 @@ from torch.distributions import Categorical
 EPS = 0.003
 
 def fanin_init(size, fanin=None):
+	"""
+	set the weights in some random numbers 
+	uniformly distributed
+	"""
 	fanin = fanin or size[0]
 	v = 1. / np.sqrt(fanin)
 	return torch.Tensor(size).uniform_(-v, v)
 
 
 class Actor(nn.Module):
-    def __init__(self, state_size, action_size, action_lim, hidden1=400, hidden2=300, init_w=3e-3):
+    def __init__(self, state_size, action_size, action_lim, hidden1=400, hidden2=300):
         super().__init__()
         
         self.action_lim = action_lim
@@ -50,7 +54,7 @@ class Actor(nn.Module):
 
 class Critic(nn.Module):
 
-	def __init__(self, state_dim, action_dim, hidden1=256, hidden2=128):
+	def __init__(self, state_dim, action_dim, hidden1=400, hidden2=300):
 		"""
 		:param state_dim: Dimension of input state (int)
 		:param action_dim: Dimension of input action (int)
@@ -77,7 +81,7 @@ class Critic(nn.Module):
 		:return: Value function : Q(S,a) (Torch Variable : [n,1] )
 		"""
 		s1 = F.relu(self.fc1(state))
-		s2 = F.relu(self.fc2(torch.cat(s1, action)))
+		s2 = F.relu(self.fc2(torch.cat([s1, action], 1)))
 		x = self.fc3(s2)
 
 		return x
