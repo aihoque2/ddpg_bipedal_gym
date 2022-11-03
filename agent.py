@@ -53,9 +53,12 @@ class DDPG_Agent:
         }
 
     def update_policy(self):
+        #TODO
+        #VERY IMPORTANT!
         pass
 
     def eval(self):
+        TODO
         pass
 
     def observe(self, r_t, s_t1, done):
@@ -64,19 +67,38 @@ class DDPG_Agent:
             self.s_t = s_t1
 
     def random_action(self):
+        #TODO
         pass
 
     def select_action(self, s_t, decay_epsilon=True):
+        #TODO
         pass
 
-    def reset(self):
-        pass
+    def reset(self, obs):
+        self.s_t = obs
+        self.random_process.reset_states()
 
     def load_weights(self, input):
-        pass
+        if input is None: return
+        #load actor and critic weights both
+        self.actor.load_state_dict(
+            torch.load('{}/actor.pkl'.format(input))
+        )
+
+        self.critic.load_state_dict(
+            torch.load('{}/critic.pkl'.format(input))
+        )
 
     def save_model(self, output):
-        pass
+        #save both actor and critic models
+        torch.save(
+            self.actor.state_dict(),
+            '{}/actor.pkl'.format(output)
+        )
+        torch.save(
+            self.critic.state_dict(),
+            '{}/critic.pkl'.format(output)
+        )
 
     def seed(self, s):
         torch.manual_seed(s)
@@ -85,5 +107,7 @@ class DDPG_Agent:
 
 
     def cuda(self):
-        pass
-        
+        self.actor.cuda()
+        self.actor_target.cuda()
+        self.critic.cuda()
+        self.critic_target.cuda()
