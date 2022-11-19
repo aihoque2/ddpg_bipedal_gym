@@ -11,7 +11,7 @@ from torch.optim import Adam
 #local files
 from model import Actor, Critic
 from utils.replay_buffer import ReplayBuffer
-from utils.update_funcs import *
+from utils.helper_funcs import *
 from utils.noise_model import * 
 
 class DDPG_Agent:
@@ -54,12 +54,16 @@ class DDPG_Agent:
 
     def update_policy(self):
         #TODO
-        #VERY IMPORTANT!
+        #update the actor. VERY IMPORTANT!
+
         pass
 
     def eval(self):
-        TODO
-        pass
+        self.actor.eval()
+        self.actor_tgt.eval()
+
+        self.critic.eval()
+        self.critic_tgt.eval()
 
     def observe(self, r_t, s_t1, done):
         if self.is_training:
@@ -67,12 +71,24 @@ class DDPG_Agent:
             self.s_t = s_t1
 
     def random_action(self):
-        #TODO
-        pass
+        """
+        action taken in exploration phase
+        """
+        action = np.random(-1., 1., self.action_size)
+        self.a_t = action
+        return action
 
     def select_action(self, s_t, decay_epsilon=True):
-        #TODO
-        pass
+        action = to_numpy(self.action(to_tensor(np.array([s_t])))).squeeze(0)
+
+        #add the noise component to this action
+        action += self.is_training*max(0, self.epsilon)*self.noise.sample() 
+        
+        if decay_epsilon:
+            self.epsilon -= self.depsilon
+        
+        self.a_t = action
+        return action
 
     def reset(self, obs):
         self.s_t = obs
