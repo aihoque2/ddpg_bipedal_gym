@@ -75,15 +75,13 @@ class DDPG_Agent:
         self.critic_optim.step()
 
         # actor optimization
-        pred_a1 = self.actor.forward(s1)
-        loss_actor = -1*torch.sum(self.critic.forward(s1, pred_a1)) #we wanna max this value, so we trick the optimizaer by  
+        loss_actor = -1*torch.sum(self.critic.forward(s1, self.actor.forward(s1))) #we wanna max this value, so we trick the optimizaer by  
         self.actor_optim.zero_grad()
         loss_actor.backward()
         self.actor_optim.step()
         
         soft_update(self.critic_tgt, self.critic, TAU)
         soft_update(self.actor_tgt, self.actor, TAU)
-
 
     def eval(self):
         self.actor.eval()
