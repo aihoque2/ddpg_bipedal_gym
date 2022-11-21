@@ -9,22 +9,29 @@ take samples that are i.i.d.
 """
 
 import torch
-import gym
 import random
 from collections import namedtuple, deque
 
-Transition = namedtupled('Transition', ('state', 'action', 'next_state', 'reward')) #data that the replaybuffer takes
+Transition = namedtuple('Transition', ('state', 'action', 'reward', 'next_state')) #data that the replaybuffer takes
 
 
 class ReplayBuffer:
     def __init__(self, capacity):
         self.memory = deque([], maxlen=capacity)
     
-    def push(self, *args):
-        self.memory.append(Transition(*args))
+    def push(self, s1, a1 , r1, s2):
+        self.memory.append(Transition(s1, a1, r1, s2))
 
-    def sample(self, batch_size):
-        return random.sample(self.memory, batch_size)
+    def sample(self, batch_size)    :
+        #return s1, a1, r1, s2
+        batch = random.sample(self.memory, batch_size)
+        
+        s1 = [tuple.state for tuple in batch]
+        a1 = [tuple.action for tuple in batch]
+        r1 = [tuple.reward for tuple in batch]
+        s2 = [tuple.next_state for tuple in batch]
+
+        return torch.Tensor(s1), torch.Tensor(a1), torch.Tensor(r1), torch.Tensor(s2)
     
     def __len__(self):
         return len(self.memory)
