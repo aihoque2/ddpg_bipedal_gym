@@ -5,7 +5,7 @@ file used to hold helper functions
 """
 
 import torch
-
+import numpy as np
 
 #update functions
 def soft_update(target, source, tau):
@@ -19,9 +19,9 @@ def hard_update(target, source):
             target_param.data.copy_(param.data)
 
 def to_numpy(var):
-    return var.cpu().data.numpy() if USE_CUDA else var.data.numpy()
+    return var.cpu().data.numpy() if not USE_CUDA else var.data.numpy()
 
-def to_tensor(ndarray, volatile=False, requires_grad=False, dtype=FLOAT):
+def to_tensor(ndarray, volatile=False, requires_grad=False, dtype=np.float64):
     return torch.Variable(
         torch.from_numpy(ndarray), volatile=volatile, requires_grad=requires_grad
     ).type(dtype)
