@@ -9,7 +9,7 @@ def train(env, agent, evaluator, num_iterations, validate_steps, output, max_epi
     agent.is_training = True
     step = episode = episode_steps = 0 
     episode_reward = 0.0 # episode is each instance of the game running
-    observation = None
+    observation = None # current state
 
 
     warmup_steps = 100 # first 100 steps we do a random observation
@@ -21,10 +21,11 @@ def train(env, agent, evaluator, num_iterations, validate_steps, output, max_epi
             observation = deepcopy(env.reset())
             agent.reset(observation)
         
+        # action selection
         if step <= warmup_steps:
             action = agent.random_action()
         else:
-            action = agent.select_action(observation)
+            action = agent.select_action(observation) 
 
         observation2, reward, terminated, truncated, info = env.step(action)
         observation2 = deepcopy(observation2)
@@ -32,14 +33,30 @@ def train(env, agent, evaluator, num_iterations, validate_steps, output, max_epi
         if episode_steps >= max_episode_length - 1:
             terminated = True
 
-        agent.observe()
+        agent.observe(reward, observation2)
+        
+        if step > warmup_steps:
+            agent.optimize()
 
-        if done:
+
+        # evaluation
+        if evaluator is not None and step % validate_steps == 0:
+            policy = lambda x : agent.select_action(x, decay_epsilon = False)
+            validate_reward = evaluator(env, policy, debug=True, visualize=False, save=True)
+            statement = '[Evaluate] step {}: validate_reward:{}'.format(step, validate_reward) 
+            print("\033[93m {}\033[00m" .format(statement))            
+
+        if terminated: # end of an episode
+            if debug: prGreen('#{}: episode_reward:{} steps:{}'.format(episode,episode_reward,step))
+            
+            agent.memory.append((observation, agent.select_action(observation), 0.0, None))
+            
             episode += 1
             episode_steps = 0
             episode_reward = 0.0
             observation = None
 
+    agent.save_model(output)
 
 
 env = gym.make('BipedalWalker-v3', render_mode="human")

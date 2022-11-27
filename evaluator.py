@@ -17,7 +17,11 @@ class Evaluator:
         self.results = np.array([]).reshape(num_episodes,0)
 
     def __call__(self, env, policy, debug=False, visualize=False, save=True):
-        """override the () operator"""
+        """
+        override the () operator
+        
+        @param policy: the function pointer to the agent's policy to call when testing our policy
+        """
         self.is_training = False
         observation = None
         result = []

@@ -90,10 +90,13 @@ class DDPG_Agent:
         self.critic.eval()
         self.critic_tgt.eval()
 
-    def observe(self, r_t, s_t1, done):
+    def observe(self, r_t, s_t2):
+        """
+        add the new experience into experience replay
+        """
         if self.is_training:
-            self.memory.append(self.s_t, self.a_t, r_t, done)
-            self.s_t = s_t1
+            self.memory.append((self.s_t, self.a_t, r_t, s_t2))
+            self.s_t = s_t2
 
     def random_action(self):
         """
