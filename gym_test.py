@@ -14,6 +14,7 @@ for step in range(num_steps):
 
     obs, reward, terminated, truncated, info = env.step(action)
     env.render()
+    print("here's the observation: ", type(obs))
 
     if terminated or truncated:
         obs, info = env.reset()

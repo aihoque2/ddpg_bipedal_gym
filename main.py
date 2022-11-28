@@ -5,6 +5,10 @@ import numpy as np
 
 from copy import deepcopy
 
+#our implementations
+from agent import DDPG_Agent
+from evaluator import Evaluator
+
 def train(env, agent, evaluator, num_iterations, validate_steps, output, max_episode_length=None, debug=False):
     agent.is_training = True
     step = episode = episode_steps = 0 
@@ -58,11 +62,6 @@ def train(env, agent, evaluator, num_iterations, validate_steps, output, max_epi
 
     agent.save_model(output)
 
-
-env = gym.make('BipedalWalker-v3', render_mode="human")
-
-print("here's observation space: ", env.observation_space)
-print("here's action space: ", env.action_space)
-observation, info = env.reset(seed=42)
-while True:
-    env.render()
+if __name__ == "__main__":    
+    env = gym.make('BipedalWalker-v3', render_mode="human")
+    agent = DDPG_Agent
