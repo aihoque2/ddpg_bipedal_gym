@@ -19,8 +19,8 @@ LEARNING_RATE = 0.001
 GAMMA = 0.99 # discount rate
 TAU = 0.001 # soft target update factor
 
-class DDPG_Agent:
-    def __init__(self, env, state_size, action_size, action_lim, hidden1, hidden2, prate, rate, device):
+class DDPGAgent:
+    def __init__(self, state_size, action_size, action_lim, hidden1, hidden2, prate, rate):
 
         self.state_size = state_size
         self.action_size = action_size
@@ -43,7 +43,7 @@ class DDPG_Agent:
         hard_update(self.actor, self.actor_tgt)
         hard_update(self.critic, self.critic_tgt)
 
-        self.memory = ReplayBuffer(7e3)    
+        self.memory = ReplayBuffer(7e6)    
         self.noise = OrnsteinUhlenbeckProcess(theta=0.15, sigma=0.2, mu=0.0, size=self.action_size, )
 
         self.depsilon = 1.0/50000.0

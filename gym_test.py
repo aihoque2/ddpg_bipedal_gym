@@ -5,8 +5,8 @@ import numpy as np
 num_steps = 1500
 
 env = gym.make('BipedalWalker-v3', render_mode="human")
-print("here's observation space: ", env.observation_space)
-print("here's action space: ", env.action_space)
+print("here's observation space: ", type(env.observation_space.shape))
+print("here's action space: ", type(env.action_space))
 obs = env.reset()
 
 for step in range(num_steps):

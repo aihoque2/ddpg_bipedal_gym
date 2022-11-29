@@ -6,9 +6,11 @@ import numpy as np
 from copy import deepcopy
 
 #our implementations
-from agent import DDPG_Agent
+from agent import DDPGAgent
 from evaluator import Evaluator
 from normalized_env import NormalizedEnv
+
+device = torch.device('cuda') if torch.cuda.is_available else torch.device('cpu')
 
 def train(env, agent, evaluator, num_iterations, validate_steps, output, max_episode_length=None, debug=False):
     agent.is_training = True
@@ -65,9 +67,9 @@ def train(env, agent, evaluator, num_iterations, validate_steps, output, max_epi
 
 if __name__ == "__main__":    
     env = gym.make('BipedalWalker-v3', render_mode="human")
-    norm_env = 
+    norm_env = NormalizedEnv(env)
 
     state_size = env.observation_space.shape[0]
     action_size = env.action_space.shape[0]
 
-    agent = DDPG_Agent()
+    agent = DDPGAgent(state_size, action_size, )

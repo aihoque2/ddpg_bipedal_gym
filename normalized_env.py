@@ -3,7 +3,7 @@ import gym
 import numpy as np
 
 
-class normalized_env(gym.ActionWrapper)
+class NormalizedEnv(gym.ActionWrapper)
     def __init__(self, env):
         super().__init__(env)
         
