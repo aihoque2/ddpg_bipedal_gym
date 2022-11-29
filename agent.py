@@ -20,7 +20,7 @@ GAMMA = 0.99 # discount rate
 TAU = 0.001 # soft target update factor
 
 class DDPGAgent:
-    def __init__(self, state_size, action_size, action_lim, hidden1, hidden2, prate, rate):
+    def __init__(self, state_size, action_size, action_lim, prate, rate):
 
         self.state_size = state_size
         self.action_size = action_size
@@ -32,7 +32,7 @@ class DDPGAgent:
         self.batch_size = 128
 
         # neural network setup
-        self.actor = Actor(self.state_size, self.action_size, action_lim, hidden1, hidden2)
+        self.actor = Actor(self.state_size, self.action_size, action_lim, hidden1=400, hidden2=300)
         self.actor_tgt = Actor(self.state_size, self.action_size, action_lim)
         self.actor_optim = Adam(self.actor.parameters, lr=self.prate)
         

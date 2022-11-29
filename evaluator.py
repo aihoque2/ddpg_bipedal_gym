@@ -9,9 +9,9 @@ import numpy as np
 from scipy.io import savemat
 
 class Evaluator:
-    def __init__(self, num_episodes, save_path='', max_episode_length=None):
+    def __init__(self, num_episodes, interval, save_path='', max_episode_length=None):
         self.num_episodes = num_episodes
-        self.interval = interval
+        self.interval = interval # number of validation steps
         self.max_episode_length= max_episode_length
         self.save_path = save_path
         self.results = np.array([]).reshape(num_episodes,0)
