@@ -8,6 +8,7 @@ from copy import deepcopy
 #our implementations
 from agent import DDPG_Agent
 from evaluator import Evaluator
+from normalized_env import NormalizedEnv
 
 def train(env, agent, evaluator, num_iterations, validate_steps, output, max_episode_length=None, debug=False):
     agent.is_training = True
@@ -64,4 +65,9 @@ def train(env, agent, evaluator, num_iterations, validate_steps, output, max_epi
 
 if __name__ == "__main__":    
     env = gym.make('BipedalWalker-v3', render_mode="human")
-    agent = DDPG_Agent
+    norm_env = 
+
+    state_size = env.observation_space.shape[0]
+    action_size = env.action_space.shape[0]
+
+    agent = DDPG_Agent()

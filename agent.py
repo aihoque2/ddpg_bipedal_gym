@@ -1,6 +1,6 @@
 #!/usr/local/bin/python3
 
-#agent.py
+# agent.py
 import gym
 import time
 
@@ -9,7 +9,7 @@ import torch.nn as nn
 from torch.optim import Adam
 import torch.nn.functional as F
 
-#local files
+# local files
 from model import Actor, Critic
 from utils.replay_buffer import ReplayBuffer
 from utils.helper_funcs import *
