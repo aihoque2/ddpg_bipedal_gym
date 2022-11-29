@@ -42,7 +42,7 @@ class Evaluator:
 
                 observation, reward, terminated, truncated, info = env.step(action)
 
-                if self.max_episode_length and episode_step >= self.max_episode_length - 1
+                if self.max_episode_length and episode_step >= (self.max_episode_length - 1):
                     done = True
 
                 if visualize:

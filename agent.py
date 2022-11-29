@@ -34,7 +34,7 @@ class DDPGAgent:
         # neural network setup
         self.actor = Actor(self.state_size, self.action_size, action_lim, hidden1=400, hidden2=300)
         self.actor_tgt = Actor(self.state_size, self.action_size, action_lim)
-        self.actor_optim = Adam(self.actor.parameters, lr=self.prate)
+        self.actor_optim = Adam(self.actor.parameters(), lr=self.prate)
         
         self.critic = Critic(self.state_size, self.action_size)
         self.critic_tgt = Critic(self.state_size, self.action_size) # used to calculate y_i
@@ -54,9 +54,8 @@ class DDPGAgent:
         self.a_t = None
         self.is_training = True
 
-        if (torch.cuda.is_available()){
+        if (torch.cuda.is_available()):
             self.cuda()
-        }
 
     def optimize(self):
         s1, a1, r1, s2 = self.memory.sample(self.batch_size)
@@ -69,13 +68,13 @@ class DDPGAgent:
         y_i = r1 + GAMMA*torch.squeeze(self.critic_tgt.forward(s2, a2)) # why we need crtic_tgt
         y_predicted = torch.squeeze(self.critic.forward(s1, a1))
 
-        loss_critic = F.smooth_l1_loss(y_predicted, y_i)
+        loss_critic = F.smooth_l1_loss(y_predicted, y_i) 
         self.critic_optim.zero_grad() #reset gradients in the optimizer
         loss_critic.backward() # backpropogate the loss 
         self.critic_optim.step()
 
         # actor optimization
-        loss_actor = -1*torch.sum(self.critic.forward(s1, self.actor.forward(s1))) #we wanna max this value, so we trick the optimizaer by  
+        loss_actor = -1*torch.sum(self.critic.forward(s1, self.actor.forward(s1))) #we wanna max this value, so we trick the optimizer by calculating -1
         self.actor_optim.zero_grad()
         loss_actor.backward()
         self.actor_optim.step()

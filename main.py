@@ -37,7 +37,7 @@ def train(env, agent, evaluator, num_iterations, validate_steps, output, max_epi
         observation2, reward, terminated, truncated, info = env.step(action)
         observation2 = deepcopy(observation2)
 
-        if episode_steps >= max_episode_length - 1:
+        if episode_steps >= (max_episode_length - 1):
             terminated = True
 
         agent.observe(reward, observation2)
@@ -78,4 +78,3 @@ if __name__ == "__main__":
     
     train(env=norm_env, agent=ddpg_agent, evaluator=evaluator, num_iterations=200000, validate_steps=2000, output="saved_models/output.pth", max_episode_length=None, debug=True)
 
-    
