@@ -66,9 +66,9 @@ class Critic(nn.Module):
 		self.action_dim = action_dim
 
 		self.fc1 = nn.Linear(state_dim, hidden1)
-		self.fc1.weight.data = fanin_init(self.fcs1.weight.data.size())
+		self.fc1.weight.data = fanin_init(self.fc1.weight.data.size())
 		self.fc2 = nn.Linear(hidden1+action_dim, hidden2)
-		self.fc2.weight.data = fanin_init(self.fcs2.weight.data.size())
+		self.fc2.weight.data = fanin_init(self.fc2.weight.data.size())
 
 		self.fc3 = nn.Linear(hidden2,1)
 		self.fc3.weight.data.uniform_(-EPS,EPS)

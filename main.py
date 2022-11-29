@@ -76,5 +76,5 @@ if __name__ == "__main__":
     agent = DDPGAgent(state_size, action_size, action_lim, prate=0.0001, rate=0.001)
     evaluator = Evaluator(num_episodes=20, interval=2000, save_path="saved_models/output.pth")
     
-    train(env=norm_env, agent=ddpg_agent, evaluator=evaluator, num_iterations=200000, validate_steps=2000, output="saved_models/output.pth", max_episode_length=None, debug=True)
+    train(env=norm_env, agent=agent, evaluator=evaluator, num_iterations=200000, validate_steps=2000, output="saved_models/output.pth", max_episode_length=None, debug=True)
 

@@ -43,8 +43,8 @@ class DDPGAgent:
         hard_update(self.actor, self.actor_tgt)
         hard_update(self.critic, self.critic_tgt)
 
-        self.memory = ReplayBuffer(7e6)    
-        self.noise = OrnsteinUhlenbeckProcess(theta=0.15, sigma=0.2, mu=0.0, size=self.action_size, )
+        self.memory = ReplayBuffer(int(7e6))    
+        self.noise_model = OrnsteinUhlenbeckProcess(theta=0.15, sigma=0.2, mu=0.0, size=self.action_size, )
 
         self.depsilon = 1.0/50000.0
 
@@ -101,7 +101,7 @@ class DDPGAgent:
         """
         action taken in exploration phase
         """
-        action = np.random(-1., 1., self.action_size)
+        action = np.random.uniform(-1., 1., self.action_size)
         self.a_t = action
         return action
 
@@ -109,7 +109,7 @@ class DDPGAgent:
         action = to_numpy(self.action(to_tensor(np.array([s_t])))).squeeze(0)
 
         #add the noise component to this action
-        action += self.is_training*max(0, self.epsilon)*self.noise.sample() 
+        action += self.is_training*max(0, self.epsilon)*self.noise_model.sample() 
         
         if decay_epsilon:
             self.epsilon -= self.depsilon
@@ -119,7 +119,7 @@ class DDPGAgent:
 
     def reset(self, obs):
         self.s_t = obs
-        self.random_process.reset_states()
+        self.noise_model.reset_states()
 
     def load_weights(self, input):
         if input is None: return
