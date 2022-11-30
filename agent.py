@@ -20,8 +20,9 @@ GAMMA = 0.99 # discount rate
 TAU = 0.001 # soft target update factor
 
 class DDPGAgent:
-    def __init__(self, state_size, action_size, action_lim, prate, rate):
-
+    def __init__(self, env, state_size, action_size, action_lim, prate, rate):
+        
+        self.env = env
         self.state_size = state_size
         self.action_size = action_size
         self.action_lim = action_lim
@@ -101,7 +102,8 @@ class DDPGAgent:
         """
         action taken in exploration phase
         """
-        action = np.random.uniform(-1., 1., self.action_size)
+        #action = np.random.uniform(-1., 1., self.action_size)
+        action = self.env.action_space.sample()
         self.a_t = action
         return action
 

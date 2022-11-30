@@ -12,7 +12,8 @@ from normalized_env import NormalizedEnv
 
 device = torch.device('cuda') if torch.cuda.is_available else torch.device('cpu')
 
-def train(env, agent, evaluator, num_iterations, validate_steps, output, max_episode_length=None, debug=False):
+def train(env, agent, evaluator, num_iterations, validate_steps, output, debug=False):
+    max_episode_length = 500
     agent.is_training = True
     step = episode = episode_steps = 0 
     episode_reward = 0.0 # episode is each instance of the game running
@@ -73,8 +74,8 @@ if __name__ == "__main__":
     action_size = env.action_space.shape[0]
     action_lim = env.action_space.high[0]
 
-    agent = DDPGAgent(state_size, action_size, action_lim, prate=0.0001, rate=0.001)
+    agent = DDPGAgent(env, state_size, action_size, action_lim, prate=0.0001, rate=0.001)
     evaluator = Evaluator(num_episodes=20, interval=2000, save_path="saved_models/output.pth")
     
-    train(env=norm_env, agent=agent, evaluator=evaluator, num_iterations=200000, validate_steps=2000, output="saved_models/output.pth", max_episode_length=None, debug=True)
+    train(env=env, agent=agent, evaluator=evaluator, num_iterations=200000, validate_steps=2000, output="saved_models/output.pth", debug=True)
 
