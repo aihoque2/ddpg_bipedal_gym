@@ -55,9 +55,11 @@ def train(env, agent, evaluator, num_iterations, validate_steps, output, debug=F
             print("\033[93m {}\033[00m" .format(statement))            
 
         if terminated: # end of an episode
-            if debug: prGreen('#{}: episode_reward:{} steps:{}'.format(episode,episode_reward,step))
+            if debug: 
+                statement = '#{}: episode_reward:{} steps:{}'.format(episode,episode_reward,step)
+                print("\033[92m {}\033[00m" .format(statement))
             
-            agent.memory.append((observation, agent.select_action(observation), 0.0, None))
+            agent.memory.push((observation, agent.select_action(observation), 0.0, None))
             
             episode += 1
             episode_steps = 0
@@ -68,7 +70,7 @@ def train(env, agent, evaluator, num_iterations, validate_steps, output, debug=F
 
 if __name__ == "__main__":    
     env = gym.make('BipedalWalker-v3', render_mode="human")
-    norm_env = NormalizedEnv(env)
+    #norm_env = NormalizedEnv(env)
 
     state_size = env.observation_space.shape[0]
     action_size = env.action_space.shape[0]

@@ -29,7 +29,8 @@ class Evaluator:
         for episode in range(self.num_episodes):
 
             #reset env tp start
-            observation = env.reset()
+            observation, info = env.reset()
+            print("here's observation after env.reset(): ", observation.shape)
             episode_step = 0
             episode_reward = 0.0
 

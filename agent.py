@@ -95,7 +95,7 @@ class DDPGAgent:
         add the new experience into experience replay
         """
         if self.is_training:
-            self.memory.append((self.s_t, self.a_t, r_t, s_t2))
+            self.memory.push(self.s_t, self.a_t, r_t, s_t2)
             self.s_t = s_t2
 
     def random_action(self):
@@ -108,7 +108,8 @@ class DDPGAgent:
         return action
 
     def select_action(self, s_t, decay_epsilon=True):
-        action = to_numpy(self.action(to_tensor(np.array([s_t])))).squeeze(0)
+        print ("here's s_t: ", s_t)
+        action = self.actor(s_t)
 
         #add the noise component to this action
         action += self.is_training*max(0, self.epsilon)*self.noise_model.sample() 
