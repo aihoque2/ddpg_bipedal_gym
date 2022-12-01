@@ -109,7 +109,7 @@ class DDPGAgent:
 
     def select_action(self, s_t, decay_epsilon=True):
         print ("here's s_t: ", s_t)
-        action = self.actor(s_t)
+        action = self.actor(torch.from_numpy(s_t))
 
         #add the noise component to this action
         action += self.is_training*max(0, self.epsilon)*self.noise_model.sample() 
