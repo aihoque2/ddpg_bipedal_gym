@@ -72,7 +72,7 @@ if __name__ == "__main__":
     env = gym.make('BipedalWalker-v3', render_mode="human")
     #norm_env = NormalizedEnv(env)
 
-    state_size = env.observation_space.shape[0]
+    state_size = int(env.observation_space.shape[0])
     action_size = env.action_space.shape[0]
     action_lim = env.action_space.high[0]
 

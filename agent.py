@@ -33,7 +33,7 @@ class DDPGAgent:
         self.batch_size = 128
 
         # neural network setup
-        self.actor = Actor(self.state_size, self.action_size, action_lim, hidden1=400, hidden2=300)
+        self.actor = Actor(self.state_size, self.action_size, action_lim)
         self.actor_tgt = Actor(self.state_size, self.action_size, action_lim)
         self.actor_optim = Adam(self.actor.parameters(), lr=self.prate)
         
@@ -108,7 +108,6 @@ class DDPGAgent:
         return action
 
     def select_action(self, s_t, decay_epsilon=True):
-        print ("here's s_t: ", s_t)
         action = self.actor(torch.from_numpy(s_t))
 
         #add the noise component to this action

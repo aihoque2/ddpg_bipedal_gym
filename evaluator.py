@@ -30,7 +30,6 @@ class Evaluator:
 
             #reset env tp start
             observation, info = env.reset()
-            print("here's observation after env.reset(): ", observation.shape)
             episode_step = 0
             episode_reward = 0.0
 
@@ -38,7 +37,6 @@ class Evaluator:
 
             done = False
             while not done:
-
                 action = policy(observation) # use our policy to get an action
 
                 observation, reward, terminated, truncated, info = env.step(action)
