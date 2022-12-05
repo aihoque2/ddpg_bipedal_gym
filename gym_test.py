@@ -26,7 +26,6 @@ for step in range(num_steps):
     if step>10:
         print("action from linear layer")
         action = fc1(torch.from_numpy(obs))
-        print("given action: ", action)
 
     obs, reward, terminated, truncated, info = env.step(action)
     env.render()

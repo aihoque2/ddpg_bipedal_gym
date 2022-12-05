@@ -25,6 +25,7 @@ def train(env, agent, evaluator, num_iterations, validate_steps, output, debug=F
 
 
     while step < num_iterations:
+        print("here's step: ", step)
         if observation is None:
             observation = deepcopy(env.reset())
             agent.reset(observation)
@@ -49,10 +50,12 @@ def train(env, agent, evaluator, num_iterations, validate_steps, output, debug=F
 
         # evaluation
         if evaluator is not None and step % validate_steps == 0:
+            agent.is_training=False
             policy = lambda x : agent.select_action(x, decay_epsilon = False)
             validate_reward = evaluator(env, policy, debug=True, visualize=False, save=True)
             statement = '[Evaluate] step {}: validate_reward:{}'.format(step, validate_reward) 
-            print("\033[93m {}\033[00m" .format(statement))            
+            print("\033[93m {}\033[00m" .format(statement))
+            agent.is_training=True            
 
         if terminated: # end of an episode
             if debug: 
