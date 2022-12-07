@@ -37,7 +37,7 @@ def train(env, agent, evaluator, num_iterations, validate_steps, output, debug=F
             action = agent.select_action(observation) 
 
         observation2, reward, terminated, truncated, info = env.step(action)
-        observation2 = deepcopy(observation2)
+        observation2 = deepcopy(observation2)        
 
         if episode_steps >= (max_episode_length - 1):
             terminated = True
@@ -45,17 +45,25 @@ def train(env, agent, evaluator, num_iterations, validate_steps, output, debug=F
         agent.observe(reward, observation2)
         
         if step > warmup_steps:
+            print("outside of warmup")
             agent.optimize()
 
 
         # evaluation
-        if evaluator is not None and step % validate_steps == 0:
+        if evaluator is not None and step != 0 and step % validate_steps == 0:
+            print("in evaluator")
             agent.is_training=False
             policy = lambda x : agent.select_action(x, decay_epsilon = False)
             validate_reward = evaluator(env, policy, debug=True, visualize=False, save=True)
             statement = '[Evaluate] step {}: validate_reward:{}'.format(step, validate_reward) 
             print("\033[93m {}\033[00m" .format(statement))
             agent.is_training=True            
+
+        #update
+        step += 1
+        episode_steps += 1
+        episode_reward += reward
+        observation = deepcopy(observation2)
 
         if terminated: # end of an episode
             if debug: 
