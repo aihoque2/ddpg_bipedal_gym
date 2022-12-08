@@ -11,7 +11,7 @@ import torch.nn.functional as F
 
 # local files
 from model import Actor, Critic
-from utils.replay_buffer import ReplayBuffer
+from utils.memory import ReplayBuffer
 from utils.helper_funcs import *
 from utils.noise_model import * 
 
