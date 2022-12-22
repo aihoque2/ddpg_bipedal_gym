@@ -29,7 +29,7 @@ class DDPGAgent:
         self.prate = prate # actor learning rate
         self.rate = rate # critic learn rate for optimizerr
         self.tau = 0.001 # tarrget update weight
-        self.discount = 0.99
+        self.discount = GAMMA
         self.batch_size = 128
 
         # neural network setup
@@ -59,14 +59,14 @@ class DDPGAgent:
             self.cuda()
 
     def optimize(self):
-        s1, a1, r1, s2 = self.memory.sample(self.batch_size)
+        s1, a1, r1, s2, terminal_batch = self.memory.sample(self.batch_size)
         
         # get the new action and rreward for experrience replay
         
         # critic optimization
         a2 = self.actor_tgt.forward(s1)
 
-        y_i = r1 + GAMMA*torch.squeeze(self.critic_tgt.forward(s2, a2)) # why we need crtic_tgt
+        y_i = r1 + self.discount*terminal_batch.astype(np.float)*torch.squeeze(self.critic_tgt.forward(s2, a2)) # why we need crtic_tgt
         y_predicted = torch.squeeze(self.critic.forward(s1, a1))
 
         loss_critic = F.smooth_l1_loss(y_predicted, y_i) 
@@ -90,12 +90,12 @@ class DDPGAgent:
         self.critic.eval()
         self.critic_tgt.eval()
 
-    def observe(self, r_t, s_t2):
+    def observe(self, r_t, s_t2, terminated):
         """
         add the new experience into experience replay
         """
         if self.is_training:
-            self.memory.push(self.s_t, self.a_t, r_t, s_t2)
+            self.memory.push(self.s_t, self.a_t, r_t, s_t2, terminated)
             self.s_t = s_t2
 
     def random_action(self):
