@@ -11,7 +11,7 @@ import torch.nn.functional as F
 
 # local files
 from model import Actor, Critic
-from utils.memory import ReplayBuffer
+from utils.memory import SequentialMemory
 from utils.helper_funcs import *
 from utils.noise_model import * 
 
@@ -30,7 +30,7 @@ class DDPGAgent:
         self.rate = rate # critic learn rate for optimizerr
         self.tau = 0.001 # tarrget update weight
         self.discount = GAMMA
-        self.batch_size = 128
+        self.batch_size = 64
 
         # neural network setup
         self.actor = Actor(self.state_size, self.action_size, action_lim)
@@ -44,7 +44,7 @@ class DDPGAgent:
         hard_update(self.actor, self.actor_tgt)
         hard_update(self.critic, self.critic_tgt)
 
-        self.memory = ReplayBuffer(int(7e6))    
+        self.memory = SequentialMemory(limit=int(7e6), window_length=1)   
         self.noise_model = OrnsteinUhlenbeckProcess(theta=0.15, sigma=0.2, mu=0.0, size=self.action_size, )
 
         self.depsilon = 1.0/50000.0
@@ -59,14 +59,14 @@ class DDPGAgent:
             self.cuda()
 
     def optimize(self):
-        s1, a1, r1, s2, terminal_batch = self.memory.sample(self.batch_size)
+        s1, a1, r1, s2, terminal_batch = self.memory.sample_and_split(self.batch_size)
         
         # get the new action and rreward for experrience replay
         
         # critic optimization
         a2 = self.actor_tgt.forward(s1)
 
-        y_i = r1 + self.discount*terminal_batch.astype(np.float)*torch.squeeze(self.critic_tgt.forward(s2, a2)) # why we need crtic_tgt
+        y_i = r1 + self.discount*terminal_batch*torch.squeeze(self.critic_tgt.forward(s2, a2)) # why we need crtic_tgt
         y_predicted = torch.squeeze(self.critic.forward(s1, a1))
 
         loss_critic = F.smooth_l1_loss(y_predicted, y_i) 
@@ -94,10 +94,11 @@ class DDPGAgent:
         """
         add the new experience into experience replay
         """
+        print("observe() call")
         if self.is_training:
-            self.memory.push(self.s_t, self.a_t, r_t, s_t2, terminated)
+            self.memory.append(self.s_t, self.a_t, r_t, terminated)
             self.s_t = s_t2
-
+        
     def random_action(self):
         """
         action taken in exploration phase

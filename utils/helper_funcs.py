@@ -7,6 +7,8 @@ file used to hold helper functions
 import torch
 import numpy as np
 
+USE_CUDA = torch.cuda.is_available()
+
 #update functions
 def soft_update(target, source, tau):
     for target_param, param in zip(target.parameters(), source.parameters()):
@@ -23,5 +25,5 @@ def hard_update(target, source):
 def to_numpy(var):
     return var.cpu().data.numpy() if not USE_CUDA else var.data.numpy()
 
-def to_tensor(ndarray, volatile=False, requires_grad=False, dtype=np.float64):
+def to_tensor(ndarray, volatile=False, requires_grad=False, dtype=np.float32):
     return torch.from_numpy(ndarray)

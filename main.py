@@ -71,7 +71,7 @@ def train(env, agent, evaluator, num_iterations, validate_steps, output, debug=F
                 statement = '#{}: episode_reward:{} steps:{}'.format(episode,episode_reward,step)
                 print("\033[92m {}\033[00m" .format(statement))
             
-            agent.memory.push(observation, agent.select_action(observation), 0.0, None, terminated)
+            agent.memory.append(observation, agent.select_action(observation), 0.0, terminated)
             
             episode += 1
             episode_steps = 0
