@@ -46,7 +46,6 @@ def train(env, agent, evaluator, num_iterations, validate_steps, output, debug=F
         agent.observe(reward, observation2, terminated)
         
         if step > warmup_steps:
-            print("outside of warmup")
             agent.optimize()
 
 

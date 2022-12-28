@@ -59,10 +59,16 @@ class DDPGAgent:
             self.cuda()
 
     def optimize(self):
+        # get the new action and rreward for experrience replay
         s1, a1, r1, s2, terminal_batch = self.memory.sample_and_split(self.batch_size)
         
-        # get the new action and rreward for experrience replay
-        
+        s1 = torch.from_numpy(s1.astype(np.float32))
+        a1 = torch.from_numpy(a1)
+        r1 = torch.from_numpy(r1)
+        s2 = torch.from_numpy(s2)
+        terminal_batch = torch.from_numpy(terminal_batch.astype(np.float32))
+
+                
         # critic optimization
         a2 = self.actor_tgt.forward(s1)
 

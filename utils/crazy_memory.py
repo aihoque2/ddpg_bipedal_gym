@@ -1,3 +1,6 @@
+# crazy_memory.py
+# this implementation kinda sucks because it has no torch
+
 from __future__ import absolute_import
 from collections import deque, namedtuple
 import warnings
@@ -182,14 +185,15 @@ class SequentialMemory(Memory):
     def sample_and_split(self, batch_size, batch_idxs=None):
         experiences = self.sample(batch_size, batch_idxs)
 
-        state0_batch = []
+        state0_batch = [] #
         reward_batch = []
         action_batch = []
         terminal1_batch = []
         state1_batch = []
         for e in experiences:
-            state0_batch.append(e.state0)
-            state1_batch.append(e.state1)
+            print("in for loop")
+            state0_batch.append(e.state0[0])
+            state1_batch.append(e.state1[0])
             reward_batch.append(e.reward)
             action_batch.append(e.action)
             terminal1_batch.append(0. if e.terminal1 else 1.)
