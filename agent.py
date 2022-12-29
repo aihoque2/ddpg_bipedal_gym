@@ -11,13 +11,16 @@ import torch.nn.functional as F
 
 # local files
 from model import Actor, Critic
-from utils.memory import SequentialMemory
+from utils.memory import ReplayMemory
 from utils.helper_funcs import *
 from utils.noise_model import * 
 
 LEARNING_RATE = 0.001
 GAMMA = 0.99 # discount rate
 TAU = 0.001 # soft target update factor
+
+# if gpu is to be used
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 class DDPGAgent:
     def __init__(self, env, state_size, action_size, action_lim, prate, rate):
@@ -44,30 +47,24 @@ class DDPGAgent:
         hard_update(self.actor, self.actor_tgt)
         hard_update(self.critic, self.critic_tgt)
 
-        self.memory = SequentialMemory(limit=int(7e6), window_length=1)   
+        self.memory = ReplayMemory(size=int(7e6))   
         self.noise_model = OrnsteinUhlenbeckProcess(theta=0.15, sigma=0.2, mu=0.0, size=self.action_size, )
 
         self.depsilon = 1.0/50000.0
 
         self.epsilon = 1.0
 
-        self.s_t = None
-        self.a_t = None
+        self.s_t = None # put this as a torch Tensor
+        self.a_t = None # put this as a torch Tensor
         self.is_training = True
 
         if (torch.cuda.is_available()):
             self.cuda()
 
     def optimize(self):
+        """TODO"""
         # get the new action and rreward for experrience replay
-        s1, a1, r1, s2, terminal_batch = self.memory.sample_and_split(self.batch_size)
-        
-        s1 = torch.from_numpy(s1.astype(np.float32))
-        a1 = torch.from_numpy(a1)
-        r1 = torch.from_numpy(r1)
-        s2 = torch.from_numpy(s2)
-        terminal_batch = torch.from_numpy(terminal_batch.astype(np.float32))
-
+        s1, a1, r1, s2, terminal_batch = self.memory.sample(self.batch_size)
                 
         # critic optimization
         a2 = self.actor_tgt.forward(s1)
@@ -100,18 +97,20 @@ class DDPGAgent:
         """
         add the new experience into experience replay
         """
-        print("observe() call")
         if self.is_training:
-            self.memory.append(self.s_t, self.a_t, r_t, terminated)
+            s_t2 = torch.tensor(s_t2, dtype=torch.float32, device=device).unsqueeze(0)
+            r_t = torch.tensor([r_t], dtype=torch.float32, device=device)
+            terminated = torch.tensor([0.0 if terminated else 1.0], dtype=torch.float32, device=device)
+            self.memory.append(self.s_t, self.a_t, r_t, s_t2, terminated)
             self.s_t = s_t2
         
     def random_action(self):
-        """
+        """     
         action taken in exploration phase
         """
         #action = np.random.uniform(-1., 1., self.action_size)
         action = self.env.action_space.sample()
-        self.a_t = action
+        self.a_t = torch.tensor(action, dtype = torch.float32, device=device).unsqueeze(0)
         return action
 
     def select_action(self, s_t, decay_epsilon=True):
@@ -129,6 +128,7 @@ class DDPGAgent:
         return action
 
     def reset(self, obs):
+        obs = torch.tensor(obs, dtype=torch.float32, device=device).unsqueeze(0)
         self.s_t = obs
         self.noise_model.reset_states()
 

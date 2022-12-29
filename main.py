@@ -27,7 +27,7 @@ def train(env, agent, evaluator, num_iterations, validate_steps, output, debug=F
     while step < num_iterations:
         print("here's step: ", step)
         if observation is None:
-            observation = deepcopy(env.reset())
+            observation, _ = deepcopy(env.reset())
             agent.reset(observation)
         
         # action selection
@@ -43,7 +43,7 @@ def train(env, agent, evaluator, num_iterations, validate_steps, output, debug=F
             terminated = True
         
         print("here's is_training before observe() call: ", agent.is_training)
-        agent.observe(reward, observation2, terminated)
+        agent.observe(reward, observation2, (terminated or truncated))
         
         if step > warmup_steps:
             agent.optimize()
@@ -70,7 +70,11 @@ def train(env, agent, evaluator, num_iterations, validate_steps, output, debug=F
                 statement = '#{}: episode_reward:{} steps:{}'.format(episode,episode_reward,step)
                 print("\033[92m {}\033[00m" .format(statement))
             
-            agent.memory.append(observation, agent.select_action(observation), 0.0, terminated)
+            observation = torch.tensor(observation, dtype=torch.float32, device=device).unsqueeze(0)
+            next_state_mask = torch.zeros_like(observation)
+            action = torch.tensor(agent.select_action(observation), dtype = torch.float32, device=device).unsqueeze(0)
+            r_t = torch.tensor([0.0], dtype=torch.float32, device=device)
+            agent.memory.append(observation, action, r_t, next_state_mask, terminated)
             
             episode += 1
             episode_steps = 0
