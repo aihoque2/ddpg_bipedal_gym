@@ -10,7 +10,7 @@ from agent import DDPGAgent
 from evaluator import Evaluator
 from normalized_env import NormalizedEnv
 
-device = torch.device('cuda') if torch.cuda.is_available else torch.device('cpu')
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def train(env, agent, evaluator, num_iterations, validate_steps, output, debug=False):
     max_episode_length = 500
@@ -74,6 +74,7 @@ def train(env, agent, evaluator, num_iterations, validate_steps, output, debug=F
             next_state_mask = torch.zeros_like(observation)
             action = torch.tensor(agent.select_action(observation), dtype = torch.float32, device=device).unsqueeze(0)
             r_t = torch.tensor([0.0], dtype=torch.float32, device=device)
+            terminated = torch.tensor([0.0], dtype=torch.float32, device=device)
             agent.memory.append(observation, action, r_t, next_state_mask, terminated)
             
             episode += 1

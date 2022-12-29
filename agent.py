@@ -114,6 +114,7 @@ class DDPGAgent:
         return action
 
     def select_action(self, s_t, decay_epsilon=True):
+        print("select_action() shape: ", torch.from_numpy(s_t).shape)
         action = self.actor(torch.from_numpy(s_t))
 
         action = action.detach().numpy()
