@@ -15,10 +15,11 @@ class ReplayMemory():
         return len(self.buffer)
     
     def append(self, state, action, reward, next_state, done):
-        assert(torch.is_tensor(state), f"param 'state' is not of type 'torch.Tensor' \n state's type: {type(state)}")
-        assert(torch.is_tensor(action), f"param 'action' is not of type 'torch.Tensor' \n action's type: {type(action)}")
-        assert(torch.is_tensor(reward), f"param 'reward' is not of type 'torch.Tensor' \n reward's type: {type(reward)}")
-        assert(torch.is_tensor(next_state), f"param 'action' is not of type 'torch.Tensor' \n action's type: {type(next_state)}")
+        assert torch.is_tensor(state), f"param 'state' is not of type 'torch.Tensor' \n state's type: {type(state)}"
+        assert torch.is_tensor(action), f"param 'action' is not of type 'torch.Tensor' \n action's type: {type(action)}"
+        assert torch.is_tensor(reward), f"param 'reward' is not of type 'torch.Tensor' \n reward's type: {type(reward)}"
+        assert torch.is_tensor(next_state), f"param 'next_state' is not of type 'torch.Tensor' \n next_state's type: {type(next_state)}"
+        assert torch.is_tensor(done), f"param 'done' is not of type 'torch.Tensor' \n done's type: {type(done)}"
 
 
         self.buffer.append(Experience(state, action, reward, next_state, done))
@@ -29,7 +30,6 @@ class ReplayMemory():
         batch = Experience(*zip(*experiences))
 
         state_batch = torch.cat(batch.state)
-        print("here's state_batch: ", type(state_batch))
         action_batch = torch.cat(batch.action)
         reward_batch = torch.cat(batch.reward)
         next_state_batch = torch.cat(batch.next_state)

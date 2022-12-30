@@ -62,7 +62,6 @@ class DDPGAgent:
             self.cuda()
 
     def optimize(self):
-        """TODO: bug in self.memory.sample()"""
         # get the new action and rreward for experrience replay
         s1, a1, r1, s2, terminal_batch = self.memory.sample(self.batch_size)
                 
@@ -118,20 +117,20 @@ class DDPGAgent:
         """
         NOTE: this function only takes parameter s_t of type numpy.ndarray
         """
-        print("select_action() shape: ", torch.from_numpy(s_t).shape)
+        s_t = torch.tensor(s_t, dtype = torch.float32, device=device).unsqueeze(0)
+        action = self.actor(s_t)
+        self.a_t = action
 
-        action = self.actor(torch.from_numpy(s_t))
-
-        action = action.detach().numpy()
+        action = action.detach().cpu().numpy()
 
         #add the noise component to this action
         action += self.is_training*max(0, self.epsilon)*self.noise_model.sample() 
-        
+        print("select_action() action's shape: ", action.shape)
+
         if decay_epsilon:
             self.epsilon -= self.depsilon
 
-        self.a_t = action
-        assert(torch.is_tensor(self.a_t))
+        assert torch.is_tensor(self.a_t), "agent's a_t is not set as torch.Tensor"
         return action
 
     def reset(self, obs):
