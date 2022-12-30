@@ -57,12 +57,12 @@ class DDPGAgent:
         self.s_t = None # put this as a torch Tensor
         self.a_t = None # put this as a torch Tensor
         self.is_training = True
-
-        if (torch.cuda.is_available()):
+        
+        if torch.cuda.is_available():
             self.cuda()
 
     def optimize(self):
-        """TODO"""
+        """TODO: bug in self.memory.sample()"""
         # get the new action and rreward for experrience replay
         s1, a1, r1, s2, terminal_batch = self.memory.sample(self.batch_size)
                 
@@ -108,12 +108,16 @@ class DDPGAgent:
         """     
         action taken in exploration phase
         """
+        print("random_action() call")
         #action = np.random.uniform(-1., 1., self.action_size)
         action = self.env.action_space.sample()
         self.a_t = torch.tensor(action, dtype = torch.float32, device=device).unsqueeze(0)
         return action
 
     def select_action(self, s_t, decay_epsilon=True):
+        """
+        NOTE: this function only takes parameter s_t of type numpy.ndarray
+        """
         print("select_action() shape: ", torch.from_numpy(s_t).shape)
         action = self.actor(torch.from_numpy(s_t))
 
@@ -126,6 +130,7 @@ class DDPGAgent:
             self.epsilon -= self.depsilon
 
         self.a_t = action
+        assert(torch.is_tensor(self.a_t))
         return action
 
     def reset(self, obs):

@@ -19,10 +19,8 @@ def train(env, agent, evaluator, num_iterations, validate_steps, output, debug=F
     episode_reward = 0.0 # episode is each instance of the game running
     observation = None # current state
 
-
     warmup_steps = 100 # first 100 steps we do a random observation
     validate_steps = 2000 # every 2000 steps we evaluate the agent
-
 
     while step < num_iterations:
         print("here's step: ", step)
@@ -48,7 +46,6 @@ def train(env, agent, evaluator, num_iterations, validate_steps, output, debug=F
         if step > warmup_steps:
             agent.optimize()
 
-
         # evaluation
         if evaluator is not None and step != 0 and step % validate_steps == 0:
             print("in evaluator")
@@ -70,9 +67,9 @@ def train(env, agent, evaluator, num_iterations, validate_steps, output, debug=F
                 statement = '#{}: episode_reward:{} steps:{}'.format(episode,episode_reward,step)
                 print("\033[92m {}\033[00m" .format(statement))
             
+            action = torch.tensor(agent.select_action(observation), dtype = torch.float32, device=device).unsqueeze(0)
             observation = torch.tensor(observation, dtype=torch.float32, device=device).unsqueeze(0)
             next_state_mask = torch.zeros_like(observation)
-            action = torch.tensor(agent.select_action(observation), dtype = torch.float32, device=device).unsqueeze(0)
             r_t = torch.tensor([0.0], dtype=torch.float32, device=device)
             terminated = torch.tensor([0.0], dtype=torch.float32, device=device)
             agent.memory.append(observation, action, r_t, next_state_mask, terminated)
@@ -80,9 +77,7 @@ def train(env, agent, evaluator, num_iterations, validate_steps, output, debug=F
             episode += 1
             episode_steps = 0
             episode_reward = 0.0
-            observation = None
-        
-
+            observation = None      
 
     agent.save_model(output)
 

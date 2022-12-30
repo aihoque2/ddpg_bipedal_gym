@@ -15,10 +15,15 @@ class ReplayMemory():
         return len(self.buffer)
     
     def append(self, state, action, reward, next_state, done):
+        assert(torch.is_tensor(state), f"param 'state' is not of type 'torch.Tensor' \n state's type: {type(state)}")
+        assert(torch.is_tensor(action), f"param 'action' is not of type 'torch.Tensor' \n action's type: {type(action)}")
+        assert(torch.is_tensor(reward), f"param 'reward' is not of type 'torch.Tensor' \n reward's type: {type(reward)}")
+        assert(torch.is_tensor(next_state), f"param 'action' is not of type 'torch.Tensor' \n action's type: {type(next_state)}")
+
+
         self.buffer.append(Experience(state, action, reward, next_state, done))
 
     def sample(self, batch_size):
-        """TODO"""
         count = min(len(self.buffer), batch_size)
         experiences = random.sample(self.buffer, batch_size)
         batch = Experience(*zip(*experiences))
