@@ -114,11 +114,12 @@ class DDPGAgent:
         self.a_t = torch.tensor(action, dtype = torch.float32, device=device).unsqueeze(0)
         return action
 
-    def select_action(self, s_t, decay_epsilon=True):
+    def select_action(self, s_t:np.ndarray, decay_epsilon=True):
         """
         NOTE: this function only takes parameter s_t of type numpy.ndarray
         """
         print("select_action() shape: ", torch.from_numpy(s_t).shape)
+
         action = self.actor(torch.from_numpy(s_t))
 
         action = action.detach().numpy()
