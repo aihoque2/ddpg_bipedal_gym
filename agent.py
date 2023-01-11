@@ -122,18 +122,15 @@ class DDPGAgent:
         self.a_t = action
 
         action = action.detach().cpu().numpy()
-        print("select_action() action before: ", action)
-
 
         #add the noise component to this action
         action += self.is_training*max(0, self.epsilon)*self.noise_model.sample() 
-        print("select_action() action after noise: ", action)
 
         if decay_epsilon:
             self.epsilon -= self.depsilon
 
         assert torch.is_tensor(self.a_t), "agent's a_t is not set as torch.Tensor"
-        return action
+        return action.reshape(-1)
 
     def reset(self, obs):
         obs = torch.tensor(obs, dtype=torch.float32, device=device).unsqueeze(0)
