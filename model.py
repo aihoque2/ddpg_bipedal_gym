@@ -28,7 +28,7 @@ class Actor(nn.Module):
 		
 		super(Actor, self).__init__()
 		
-		self.action_lim = action_lim
+		self.action_lim: np.float32 = action_lim #enforce a type
 		self.state_size = state_size
 		self.action_size = action_size
 

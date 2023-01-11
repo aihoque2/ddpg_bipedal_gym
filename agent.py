@@ -107,10 +107,10 @@ class DDPGAgent:
         """     
         action taken in exploration phase
         """
-        print("random_action() call")
         #action = np.random.uniform(-1., 1., self.action_size)
         action = self.env.action_space.sample()
         self.a_t = torch.tensor(action, dtype = torch.float32, device=device).unsqueeze(0)
+        print("random_action() a_t shape: ", self.a_t.shape)   
         return action
 
     def select_action(self, s_t:np.ndarray, decay_epsilon=True):
@@ -122,10 +122,12 @@ class DDPGAgent:
         self.a_t = action
 
         action = action.detach().cpu().numpy()
+        print("select_action() action before: ", action)
+
 
         #add the noise component to this action
         action += self.is_training*max(0, self.epsilon)*self.noise_model.sample() 
-        print("select_action() action's shape: ", action.shape)
+        print("select_action() action after noise: ", action)
 
         if decay_epsilon:
             self.epsilon -= self.depsilon

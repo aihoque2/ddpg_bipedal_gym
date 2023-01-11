@@ -9,7 +9,7 @@ num_steps = 1500
 
 env = gym.make('BipedalWalker-v3', render_mode="human")
 print("here's observation space: ", env.observation_space.shape)
-print("here's action space: ", env.action_space.high[0])
+print("here's action space: ", type(env.action_space.high[0]))
 
 state_size = env.observation_space.shape[0]
 action_size = env.action_space.shape[0]
