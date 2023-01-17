@@ -191,7 +191,6 @@ class SequentialMemory(Memory):
         terminal1_batch = []
         state1_batch = []
         for e in experiences:
-            print("in for loop")
             state0_batch.append(e.state0[0])
             state1_batch.append(e.state1[0])
             reward_batch.append(e.reward)

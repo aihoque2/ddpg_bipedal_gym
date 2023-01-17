@@ -40,7 +40,6 @@ def train(env, agent, evaluator, num_iterations, validate_steps, output, debug=F
         if episode_steps >= (max_episode_length - 1):
             terminated = True
         
-        print("here's is_training before observe() call: ", agent.is_training)
         agent.observe(reward, observation2, (terminated or truncated))
         
         if step > warmup_steps:

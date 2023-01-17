@@ -110,7 +110,6 @@ class DDPGAgent:
         #action = np.random.uniform(-1., 1., self.action_size)
         action = self.env.action_space.sample()
         self.a_t = torch.tensor(action, dtype = torch.float32, device=device).unsqueeze(0)
-        print("random_action() a_t shape: ", self.a_t.shape)   
         return action
 
     def select_action(self, s_t:np.ndarray, decay_epsilon=True):
