@@ -69,7 +69,7 @@ class DDPGAgent:
         a2 = self.actor_tgt.forward(s1)
 
         y_i = r1 + self.discount*terminal_batch*torch.squeeze(self.critic_tgt.forward(s2, a2)) # why we need crtic_tgt
-        y_predicted = torch.squeeze(self.critic.forward(s1, a1))
+        y_predicted = torch.squeeze(self.critic.forward(s1, a1.detach()))
 
         loss_critic = F.smooth_l1_loss(y_predicted, y_i) 
         self.critic_optim.zero_grad() #reset gradients in the optimizer
