@@ -22,7 +22,7 @@ def train(env, agent, evaluator, num_iterations, validate_steps, output, debug=F
     warmup_steps = 100 # first 100 steps we do a random observation
     validate_steps = 2000 # every 2000 steps we evaluate the agent
 
-    while episode < num_iterations:
+    while step < num_iterations:
         print("here's step: ", step)
         if observation is None:
             observation, _ = deepcopy(env.reset())
