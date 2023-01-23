@@ -89,7 +89,7 @@ if __name__ == "__main__":
     action_lim = env.action_space.high[0]
 
     agent = DDPGAgent(env, state_size, action_size, action_lim, prate=0.0001, rate=0.001)
-    agent.load_weights("saved_models")
+    #agent.load_weights("saved_models")
     
-    train(env=env, agent=agent, evaluator=None, num_iterations=400000, validate_steps=2000, output="saved_models/", debug=True)
+    train(env=env, agent=agent, evaluator=None, num_iterations=300000, validate_steps=2000, output="saved_models/", debug=True)
 

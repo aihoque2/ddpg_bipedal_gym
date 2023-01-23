@@ -24,7 +24,7 @@ def fanin_init(size, fanin=None):
 
 class Actor(nn.Module):
 	
-	def __init__(self, state_size, action_size, action_lim, hidden1=400, hidden2=300):
+	def __init__(self, state_size, action_size, action_lim, hidden1=500, hidden2=400):
 		
 		super(Actor, self).__init__()
 		
@@ -61,7 +61,7 @@ class Actor(nn.Module):
 
 class Critic(nn.Module):
 
-	def __init__(self, state_dim, action_dim, hidden1=400, hidden2=300):
+	def __init__(self, state_dim, action_dim, hidden1=400, hidden2=300, hidden3=128):
 		"""
 		:param state_dim: Dimension of input state (int)
 		:param action_dim: Dimension of input action (int)
@@ -76,9 +76,11 @@ class Critic(nn.Module):
 		self.fc1.weight.data = fanin_init(self.fc1.weight.data.size())
 		self.fc2 = nn.Linear(hidden1+action_dim, hidden2)
 		self.fc2.weight.data = fanin_init(self.fc2.weight.data.size())
+		self.fc3 = nn.Linear(hidden2, hidden3)
+		self.fc3.weight.data = fanin_init(self.fc3.weight.data.size())
 
-		self.fc3 = nn.Linear(hidden2,1)
-		self.fc3.weight.data.uniform_(-EPS,EPS)
+		self.fc4 = nn.Linear(hidden3, 1)
+		self.fc4.weight.data.uniform_(-EPS,EPS)
 
 	def forward(self, state, action):
 		"""
@@ -89,6 +91,7 @@ class Critic(nn.Module):
 		"""
 		s1 = F.relu(self.fc1(state))
 		s2 = F.relu(self.fc2(torch.cat([s1, action], 1)))
-		x = self.fc3(s2)
+		s3 = self.fc3(s2)
+		x = self.fc4(s3)
 
 		return x

@@ -14,14 +14,15 @@ if __name__=="__main__":
 
     agent = DDPGAgent(env, state_size, action_size, action_lim, prate=0.0001, rate=0.001)
 
-    #agent.is_training = False
     agent.load_weights("saved_models")
+    agent.is_training = False
+
 
     obs, info = env.reset()
 
 
     for step in range(num_steps):
-        action = env.action_space.sample()
+        action = agent.select_action(obs)
 
         obs, reward, terminated, truncated, info = env.step(action)
         env.render()
