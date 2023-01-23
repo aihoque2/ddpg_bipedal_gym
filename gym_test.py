@@ -23,10 +23,6 @@ fc2 = nn.Linear(hidden1, hidden2)
 for step in range(num_steps):
     action = env.action_space.sample()
 
-    if step>10:
-        print("action from linear layer")
-        action = fc1(torch.from_numpy(obs))
-
     obs, reward, terminated, truncated, info = env.step(action)
     env.render()
 

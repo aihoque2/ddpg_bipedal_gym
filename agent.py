@@ -118,7 +118,7 @@ class DDPGAgent:
         """
         s_t = torch.tensor(s_t, dtype = torch.float32, device=device).unsqueeze(0)
         action = self.actor(s_t)
-        self.a_t = action
+        self.a_t = action #save this one for experience replay
 
         action = action.detach().cpu().numpy()
 
