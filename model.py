@@ -24,7 +24,7 @@ def fanin_init(size, fanin=None):
 
 class Actor(nn.Module):
 	
-	def __init__(self, state_size, action_size, action_lim, hidden1=500, hidden2=400):
+	def __init__(self, state_size, action_size, action_lim, hidden1=500, hidden2=400, hidden3=200):
 		
 		super(Actor, self).__init__()
 		
@@ -39,9 +39,12 @@ class Actor(nn.Module):
 		self.fc2 = nn.Linear(hidden1, hidden2)
 		self.fc2.weight.data = fanin_init(self.fc2.weight.data.size())
 		
-		self.fc3 = nn.Linear(hidden2, action_size)
-		self.fc3.weight.data.uniform_(-EPS, EPS)
+		self.fc3 = nn.Linear(hidden2, hidden3)
+		self.fc3.weight.data = fanin_init(self.fc3.weight.data.size())
 		
+		self.fc4 = nn.Linear(hidden3, action_size)
+		self.fc4.weight.data.uniform_(-EPS, EPS)
+
 		self.relu = nn.ReLU()
 
 	def forward(self, state):
@@ -53,7 +56,8 @@ class Actor(nn.Module):
 		x = self.fc1(state)
 		x = self.relu(x)
 		x = F.relu(self.fc2(x))
-		action = F.tanh(self.fc3(x))
+		x = F.relu(self.fc3(x))
+		action = F.tanh(self.fc4(x))
 		action = action * self.action_lim
 		
 		return action        

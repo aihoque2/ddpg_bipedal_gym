@@ -13,7 +13,7 @@ from normalized_env import NormalizedEnv
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 def train(env, agent, evaluator, num_iterations, validate_steps, output, debug=False):
-    max_episode_length = 500 #max time per episode so the agent doesn't stall
+    max_episode_length = 1000 #max time per episode so the agent doesn't stall
     agent.is_training = True
     step = episode = episode_steps = 0 
     episode_reward = 0.0 # episode is each instance of the game running
@@ -91,5 +91,5 @@ if __name__ == "__main__":
     agent = DDPGAgent(env, state_size, action_size, action_lim, prate=0.0001, rate=0.001)
     #agent.load_weights("saved_models")
     
-    train(env=env, agent=agent, evaluator=None, num_iterations=300000, validate_steps=2000, output="saved_models/", debug=True)
+    train(env=env, agent=agent, evaluator=None, num_iterations=400000, validate_steps=2000, output="saved_models/", debug=True)
 
