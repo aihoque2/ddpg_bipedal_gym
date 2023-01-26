@@ -9,8 +9,14 @@ This project is meant to be used in a ROS implementation of a bipedal robot
 
 
 ## to run:
+first clone the repo with 
+`git clone https://github.com/aihoque2/ddpg_bipedal_gym.git`
 
-run python ./main.py to recreate the findings I had with my model, as shown in the gif in results
+then cd into the repository and run
+
+`python ./main.py` 
+
+to recreate the findings I had with my model, as shown in the gif in results
 
 ## results
 see gif:
