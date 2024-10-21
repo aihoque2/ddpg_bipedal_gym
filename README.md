@@ -15,7 +15,7 @@ then cd into the repository and run
 
 `python ./main.py` 
 
-to recreate the findings I had with my model, as shown in the gif in results
+to recreate the findings I had with my model
 
 ## results
 see gif:
