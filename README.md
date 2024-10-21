@@ -5,7 +5,6 @@ more can be read here:
 
 https://arxiv.org/pdf/1509.02971.pdf
 
-This project is meant to be used in a ROS implementation of a bipedal robot
 
 
 ## to run:
