@@ -18,7 +18,7 @@ hidden1 = 400
 hidden2 = 300
 fc1 = nn.Linear(state_size, hidden1) #input layer that takes in our read state		
 fc2 = nn.Linear(hidden1, hidden2)
-#action = actor(torch.from_numpy(obs))
+
 
 for step in range(num_steps):
     action = env.action_space.sample()
