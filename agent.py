@@ -163,7 +163,6 @@ class DDPGAgent:
         if (torch.cuda.is_available()):
             torch.cuda.manual_seed(s)
 
-
     def cuda(self):
         self.actor.cuda()
         self.actor_tgt.cuda()
