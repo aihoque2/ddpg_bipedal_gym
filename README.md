@@ -19,5 +19,6 @@ to recreate the findings I had with my model
 
 ## results
 see gif:
+![](gifs/bipedal.gif)
 
-my agent was able to complete the bipdal course 3 times out of 11 runs at a time. perhaps more training.
+my agent was able to complete the bipdal course 3 times out of 11 runs at a time. perhaps more training

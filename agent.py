@@ -66,7 +66,7 @@ class DDPGAgent:
         s1, a1, r1, s2, terminal_batch = self.memory.sample(self.batch_size)
                 
         # critic optimization
-        a2 = self.actor_tgt.forward(s1)
+        a2 = self.actor_tgt.forward(s2)
 
         y_i = r1 + self.discount*terminal_batch*torch.squeeze(self.critic_tgt.forward(s2, a2)) # why we need crtic_tgt
         y_predicted = torch.squeeze(self.critic.forward(s1, a1.detach()))

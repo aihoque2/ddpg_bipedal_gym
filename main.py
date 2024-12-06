@@ -23,7 +23,6 @@ def train(env, agent, evaluator, num_iterations, validate_steps, output, debug=F
     validate_steps = 2000 # every 2000 steps we evaluate the agent
 
     while step < num_iterations:
-        print("here's step: ", step)
         if observation is None:
             observation, _ = deepcopy(env.reset())
             agent.reset(observation)
@@ -37,7 +36,7 @@ def train(env, agent, evaluator, num_iterations, validate_steps, output, debug=F
         observation2, reward, terminated, truncated, info = env.step(action)
         observation2 = deepcopy(observation2)        
 
-        if episode_steps >= (max_episode_length - 1):
+        if episode_steps >= (max_episode_length):
             terminated = True
         
         agent.observe(reward, observation2, (terminated or truncated))
